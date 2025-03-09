@@ -1,7 +1,9 @@
-# GitHub Codespaces ♥️ Flask
+#### GitHub Codespaces | Flask
 
-this is a vending machine mechanism explanations using finite automata
+# vending machine
+
+this is a vending machine mechanism explanation using finite automata
 
 we have used
-html
-flask
+- html
+- flask
