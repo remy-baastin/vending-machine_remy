@@ -1,19 +1,110 @@
+<!DOCTYPE html>
+<html>
 <head>
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-
+    <title>TEAM NOVIN Vending Machine</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Sans-serif';
+            border: 4px solid blue;
+            padding: 10px;
+            box-sizing: border-box;
+            background: #f0f8ff;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            border-radius: 12px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .product-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .product-button, .coin-button, .reset-button {
+            border: 2px solid blue;
+            background-color: #e6f0fa;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .reset-button {
+            width: 100px;
+            align-self: center;
+        }
+        .input-history, .message, .total {
+            width: 100%;
+            text-align: center;
+            border: 1px solid blue;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .full-width {
+            width: 100%;
+        }
+    </style>
+</head>
 <body>
-    <div class="App">
-        <header class="App-header">
-            <img src="{{ url_for('static', filename='Octocat.png') }}" class="App-logo" alt="logo" />
-            <p>
-                GitHub Codespaces <span class="heart">♥️</span> Flask
-            </p>
-            <p class="small">
-                Edit <code>templates/index.html</code> and refresh to see your changes!
-            </p>
-        </header>
-    </div>
-</body>
+    <div class="container">
+        <div class="title">TEAM NOVIN Vending Machine</div>
 
+        <div class="product-buttons">
+            <button class="product-button" onclick="selectProduct(1)">1 (Oreo - Rs 10)</button>
+            <button class="product-button" onclick="selectProduct(2)">2 (Coca-cola - Rs 15)</button>
+            <button class="product-button" onclick="selectProduct(3)">3 (Fox-crystal - Rs 5)</button>
+            <button class="product-button" onclick="selectProduct(4)">4 (orange-juice - Rs 5)</button>
+            <button class="product-button" onclick="selectProduct(5)">5 (kitkat - Rs 12)</button>
+        </div>
+
+        <div class="coin-buttons">
+            <button class="coin-button" onclick="insertCoin(1)">Rs 1</button>
+            <button class="coin-button" onclick="insertCoin(2)">Rs 2</button>
+            <button class="coin-button" onclick="insertCoin(5)">Rs 5</button>
+        </div>
+
+        <button class="reset-button" onclick="resetMachine()">Reset</button>
+
+        <div class="input-history">Input History: <span id="input-history"></span></div>
+        <div class="total">Total Inserted: Rs <span id="total">0</span></div>
+        <div class="message">Message: <span id="message"></span></div>
+    </div>
+
+    <script>
+        function selectProduct(productId) {
+            fetch(`/select_product/${productId}`).then(response => response.text()).then(data => document.getElementById("message").innerText = data);
+        }
+
+        function insertCoin(coin) {
+            fetch(`/insert_coin/${coin}`).then(response => response.text()).then(data => {
+                const [total, message, history] = data.split('|');
+                document.getElementById("total").innerText = total;
+                document.getElementById("message").innerText = message;
+                document.getElementById("input-history").innerText = history;
+            });
+        }
+
+        function resetMachine() {
+            fetch(`/reset`).then(response => response.text()).then(data => {
+                document.getElementById("total").innerText = "0";
+                document.getElementById("message").innerText = data;
+                document.getElementById("input-history").innerText = "";
+            });
+        }
+    </script>
+</body>
 </html>
